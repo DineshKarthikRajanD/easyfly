@@ -16,7 +16,7 @@ pipeline {
         stage('static code analsis'){
              steps{
                  withMaven(maven: 'maven3.9.9') {
-                 sh "mvn clean verify sonar:sonar -Dsonar.projectKey=easyfly -Dsonar.projectName=easyfly -Dsonar.host.url=http://localhost:9000 -Dsonar.token=sqa_1bb12ebb7efabd42392dfa32de79f084dcee278c"
+                 sh "mvn clean verify sonar:sonar -Dsonar.projectKey=easyfly -Dsonar.projectName=easyfly -Dsonar.host.url=http://localhost:9000 -Dsonar.token=$SONAR_TOKEN"
                 }      
              }
         }        

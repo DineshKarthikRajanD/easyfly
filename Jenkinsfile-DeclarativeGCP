@@ -17,7 +17,7 @@ pipeline {
         stage('static code analsis'){
              steps{
                  withMaven(maven: 'maven3.9.9') {
-                 sh 'mvn sonar:sonar  -Dsonar.host.url=http://34.173.22.71:9000/ -Dsonar.login=sqa_ab390187a312564580fbfa0bc4eece4ffac604a6'
+                 sh 'mvn sonar:sonar  -Dsonar.host.url=http://34.173.22.71:9000/ -Dsonar.login=$SONAR_TOKEN'
                 }      
              }
         }
