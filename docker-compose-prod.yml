@@ -1,0 +1,33 @@
+version: "3"
+services:
+  application:
+    image: dadaramjadhav/easyfly:prod
+    build:
+      context: .
+      dockerfile: Dockerfile-prod    
+    container_name: easyfly_app
+    ports:
+      - "8081:8081"
+    networks:
+      - easyfly_net
+    depends_on:
+      - mysqldb
+
+  mysqldb:
+    image: mysql:8.0
+    container_name: mysql
+    networks:
+      - easyfly_net
+    ports:
+     - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=easyfly_db
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+
+volumes:
+  mysql-data:
+networks:
+  easyfly_net:

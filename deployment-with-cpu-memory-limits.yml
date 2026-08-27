@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: easyfly
+spec:
+  selector:
+    matchLabels:
+      app: easyfly
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: easyfly
+    spec:
+      containers:
+        - name: easyfly
+          image: dadaramjadhav/easyfly:dev
+          ports:
+            - containerPort: 8081
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+---
+
+apiVersion: v1
+kind: Service
+metadata: 
+  name: easyfly-svc
+spec:
+  selector:
+    app: easyfly
+  ports:
+    - protocol: "TCP"
+      port: 8081
+      targetPort: 
+  type: LoadBalancer 

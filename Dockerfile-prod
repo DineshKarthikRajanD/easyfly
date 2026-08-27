@@ -1,0 +1,10 @@
+#for x86_64 architecture
+#FROM openjdk:17-jdk-alpine
+
+#for ARM64 architecture
+FROM --platform=linux/arm64 eclipse-temurin:17-jdk
+
+
+COPY target/*.jar app.jar
+ENV server.port=8081
+ENTRYPOINT ["java",  "-Dspring.profiles.active=prod", "-jar","/app.jar"]

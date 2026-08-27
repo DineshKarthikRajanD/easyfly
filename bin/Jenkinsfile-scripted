@@ -1,0 +1,49 @@
+node {
+    try {
+        // Checkout the code from the Git repository
+        stage('Checkout Code') {
+            echo 'Checking out the repository...'
+             git branch: 'main', url: 'https://gitlab.com/dmjadhav795/easyfly'
+        }
+ 
+        // Build the project using Maven
+        stage('Build') {
+            echo 'Building the project using Maven...'
+           withMaven(globalMavenSettingsConfig: '', jdk: 'JDK17', maven: 'maven3.9.9', mavenSettingsConfig: '', traceability: true) {
+    		bat 'mvn clean package'
+}
+}
+stage('Static Code Analysis') {
+                withMaven(globalMavenSettingsConfig: '', jdk: 'JDK17', maven: 'maven3.9.9', mavenSettingsConfig: '', traceability: true) {
+   		 bat 'mvn sonar:sonar  -Dsonar.host.url=http://localhost:9000/ -Dsonar.login=ff9fe11e7bbbf6ac68d0af92e0c0f9a53082a806'
+}
+        }
+ 
+ 
+        stage('Unit Testing') {
+                withMaven(globalMavenSettingsConfig: '', jdk: 'JDK17', maven: 'maven3.9.9', mavenSettingsConfig: '', traceability: true){ 
+   		 bat 'mvn test'
+}
+ 
+        }
+ 
+ 
+       stage('Publish_URL') {
+               echo 'Application running on: http://localhost:8081/'
+            }
+        stage("Run Application"){
+                 withMaven(globalMavenSettingsConfig: '', jdk: 'JDK17', maven: 'maven3.9.9', mavenSettingsConfig: '', traceability: true) {
+                bat 'mvn clean install spring-boot:run'
+          }      
+        }
+ 
+ 
+    } catch (Exception e) {
+        currentBuild.result = 'FAILURE'
+        throw e
+    } finally {
+        // Always run these steps regardless of success or failure
+        echo 'Cleaning up after pipeline execution...'
+        // Any cleanup tasks can go here
+    }
+}

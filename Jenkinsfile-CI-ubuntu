@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+    stages {
+        stage('checkout source code') {
+            steps {
+                git branch: 'main', url: 'https://gitlab.com/dmjadhav795/easyfly'
+            }
+        }
+        stage('build'){
+             steps{
+                 withMaven(maven: 'maven3.9.9') {
+                 sh 'mvn clean package'
+                }      
+             }
+        }
+        stage('static code analsis'){
+             steps{
+                 withMaven(maven: 'maven3.9.9') {
+                 sh "mvn clean verify sonar:sonar -Dsonar.projectKey=easyfly -Dsonar.projectName=easyfly -Dsonar.host.url=http://localhost:9000 -Dsonar.token=sqa_1bb12ebb7efabd42392dfa32de79f084dcee278c"
+                }      
+             }
+        }        
+        stage('test'){
+             steps{
+                 withMaven(maven: 'maven3.9.9') {
+                 sh 'mvn test'
+                }      
+             }
+        }
+        stage('build image and push') {
+            steps {
+                script{
+                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+                    sh 'docker build -t dadaramjadhav/easyfly:dev -f Dockerfile-dev .'
+                    sh 'docker push dadaramjadhav/easyfly:dev'
+                }
+                }
+            }
+        }
+        stage('trigger cd') {
+            steps {
+                build job: 'easyfly-CD-pipeline'
+            }
+        }        
+    }
+}

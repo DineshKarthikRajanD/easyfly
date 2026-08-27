@@ -1,0 +1,2 @@
+drop table if exists flight_details;
+create table flight_details (flight_id integer not null auto_increment, flight_number varchar(255), flight_source varchar(255),  flight_destination varchar(255), flight_status varchar(255), flight_duration float(53), flight_fare float(53),   primary key (flight_id));

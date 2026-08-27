@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('checkout source code') {
+            steps {
+                git branch: 'main', url: 'https://gitlab.com/dmjadhav795/easyfly'
+            }
+        }
+        stage('build'){
+             steps{
+                 withMaven(maven: 'maven3.9.9') {
+                 bat 'mvn clean package'
+                }      
+             }
+        }
+        stage('static code analsis'){
+             steps{
+                 withMaven(maven: 'maven3.9.9') {
+                 bat 'mvn sonar:sonar  -Dsonar.host.url=http://localhost:9000/ -Dsonar.login=ff9fe11e7bbbf6ac68d0af92e0c0f9a53082a806'
+                }      
+             }
+        }
+      stage('test'){
+             steps{
+                 withMaven(maven: 'maven3.9.9') {
+                 bat 'mvn test'
+                }      
+             }
+        }
+      stage('public url'){
+             steps{
+                 withMaven(maven: 'maven3.9.9') {
+                 echo 'http://localhost:8081/'
+                }      
+             }
+        }
+        stage('Run Application'){
+             steps{
+                 withMaven(maven: 'maven3.9.9') {
+                 bat 'mvn spring-boot:run -Dspring-boot.run.profiles=dev'
+                }      
+             }
+        }
+
+    }
+}

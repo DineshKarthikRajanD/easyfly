@@ -1,0 +1,10 @@
+version: "3"
+services:
+  application:
+    image: dadaramjadhav/easyfly:dev
+    build:
+      context: .
+      dockerfile: Dockerfile-dev    
+    container_name: easyfly_app
+    ports:
+      - "8081:8081"  
