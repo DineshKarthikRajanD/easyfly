@@ -15,7 +15,7 @@ node {
 }
 stage('Static Code Analysis') {
                 withMaven(globalMavenSettingsConfig: '', jdk: 'JDK17', maven: 'maven3.9.9', mavenSettingsConfig: '', traceability: true) {
-   		 sh 'mvn sonar:sonar  -Dsonar.host.url=http://localhost:9000/ -Dsonar.login=sqa_7438e2597098eaeda8f001f54a00179b5a54c994'
+   		 sh 'mvn sonar:sonar  -Dsonar.host.url=http://localhost:9000/ -Dsonar.login=squ_86ff3cb24398216f539e3481ca31fb167e87e986'
 }
         }
  
